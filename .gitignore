@@ -1,0 +1,5 @@
+data/store.json
+data/token.txt
+data/*.json
+data/inbox/*.json
+.DS_Store

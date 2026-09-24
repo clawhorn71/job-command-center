@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Job Command Center</title>
+    <link rel="stylesheet" href="/styles.css?v=4" />
+  </head>
+  <body>
+    <aside class="nav" id="nav">
+      <div class="nav-top">
+        <div class="nav-brand">
+          <span class="mark" aria-hidden="true">JC</span>
+          <div class="nav-brand-text">
+            <p class="kicker">Grok Bot</p>
+            <strong>Command Center</strong>
+          </div>
+        </div>
+        <button type="button" id="nav-toggle" aria-expanded="true" aria-controls="nav" title="Collapse menu">
+          <span class="sr-only">Collapse menu</span>
+          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+            <path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <nav class="nav-menu" aria-label="Main">
+        <button class="nav-item is-active" type="button" data-view="home" title="Home">
+          <svg class="nav-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 9.2 10 3.5l6.5 5.7V16a1 1 0 0 1-1 1h-3.5v-4.2H8V17H4.5a1 1 0 0 1-1-1V9.2Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-item" type="button" data-view="metrics" title="Metrics">
+          <svg class="nav-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 15V9m6 6V5m6 10v-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <span class="nav-label">Metrics</span>
+        </button>
+        <button class="nav-item" type="button" data-view="connect" title="Connect bots">
+          <svg class="nav-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M8 10.5 6.2 12.3a2.6 2.6 0 1 1-3.7-3.7L4.3 7m7.7 2.5 1.8-1.8a2.6 2.6 0 1 1 3.7 3.7L15.7 13M8 10h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span class="nav-label">Connect bots</span>
+        </button>
+        <button class="nav-item" type="button" data-view="about" title="About">
+          <svg class="nav-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9.2V14M10 6.4v.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span class="nav-label">About</span>
+        </button>
+      </nav>
+      <div class="nav-bots" id="nav-bots"></div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="topbar-copy">
+          <h1 id="page-title">Welcome, Carter</h1>
+          <p id="page-sub">Your live pipeline from Job Tracker, LinkedIn Job Bot, and Job Email Bot.</p>
+        </div>
+        <div class="topbar-actions">
+          <label class="search" id="home-search">
+            <span class="sr-only">Filter applications</span>
+            <input id="filter" type="search" placeholder="Search roles, companies…" />
+          </label>
+          <p class="sync-chip" id="updated">Waiting for first sync</p>
+        </div>
+      </header>
+
+      <section class="stats" id="stats"></section>
+
+      <main id="home-view" class="page home-page">
+        <section class="pane">
+          <div class="pane-head">
+            <h2>Applications</h2>
+            <p class="pane-hint">Change status in place. Columns scroll independently.</p>
+          </div>
+          <div id="pipeline" class="pipeline"></div>
+        </section>
+        <aside class="rail">
+          <section class="pane">
+            <div class="pane-head">
+              <h2>Suggested from LinkedIn</h2>
+              <p class="pane-hint">Apply opens the posting. Remove hides it.</p>
+            </div>
+            <div id="suggestions" class="stack"></div>
+          </section>
+          <section class="pane pane-short">
+            <div class="pane-head">
+              <h2>Recent activity</h2>
+            </div>
+            <div id="events" class="stack"></div>
+          </section>
+        </aside>
+      </main>
+
+      <main id="metrics-view" class="page metrics-page hidden">
+        <div class="subnav">
+          <button type="button" class="subtab is-active" data-metrics="overview">Overview</button>
+          <button type="button" class="subtab" data-metrics="funnel">Funnel</button>
+          <button type="button" class="subtab" data-metrics="companies">Companies</button>
+        </div>
+        <section class="panel rates">
+          <h2>Pipeline rates</h2>
+          <div id="metrics-kpis" class="metrics-kpis"></div>
+        </section>
+        <div class="metrics-panel is-active" data-metrics-panel="overview">
+          <section class="panel">
+            <h2>Applications by status</h2>
+            <p class="chart-caption">Count of roles currently in each status</p>
+            <div id="chart-status" class="chart"></div>
+          </section>
+          <section class="panel">
+            <h2>Status mix</h2>
+            <p class="chart-caption">Part-to-whole view of the same application statuses</p>
+            <div id="chart-mix" class="chart"></div>
+          </section>
+          <section class="panel metrics-wide">
+            <h2>Applications by week</h2>
+            <p class="chart-caption">Roles with an applied date, last 8 weeks (week starting Monday)</p>
+            <div id="chart-weeks" class="chart"></div>
+          </section>
+        </div>
+        <div class="metrics-panel" data-metrics-panel="funnel">
+          <section class="panel">
+            <h2>Funnel</h2>
+            <p class="chart-caption">Open suggestions compared with applications that have reached each stage</p>
+            <div id="chart-funnel" class="chart"></div>
+          </section>
+          <section class="panel">
+            <h2>Suggestion vs application</h2>
+            <p class="chart-caption">Open suggestions compared with applications already on the board</p>
+            <div id="chart-volume" class="chart"></div>
+          </section>
+        </div>
+        <div class="metrics-panel" data-metrics-panel="companies">
+          <section class="panel">
+            <h2>Companies on the board</h2>
+            <p class="chart-caption">Application count by company, top 8</p>
+            <div id="chart-companies" class="chart"></div>
+          </section>
+          <section class="panel">
+            <h2>Suggested companies</h2>
+            <p class="chart-caption">Open LinkedIn suggestions by company, top 8</p>
+            <div id="chart-suggested-companies" class="chart"></div>
+          </section>
+          <section class="panel metrics-wide">
+            <h2>Location mix</h2>
+            <p class="chart-caption">Applications classified from the location text (remote / hybrid / other)</p>
+            <div id="chart-location" class="chart"></div>
+          </section>
+        </div>
+      </main>
+
+      <main id="connect-view" class="page connect hidden">
+        <div class="connect-grid">
+          <section class="panel">
+            <h2>How this connects to Grok Bot</h2>
+            <p>
+              Grok Bot does not expose a public API for reading your bots. This app is
+              the local source of truth: Job Tracker, LinkedIn Job Bot, and Job Email
+              Bot write structured JSON here.
+            </p>
+            <p>
+              Use <strong>Execution on Local Computer</strong> so the request hits this
+              Mac. Cloud-computer <code>curl 127.0.0.1</code> will not reach this dashboard.
+            </p>
+            <dl class="creds">
+              <div>
+                <dt>Ingest URL</dt>
+                <dd><code id="ingest-url"></code></dd>
+              </div>
+              <div>
+                <dt>Token</dt>
+                <dd><code id="ingest-token"></code></dd>
+              </div>
+              <div>
+                <dt>File drop</dt>
+                <dd><code>data/inbox/*.json</code></dd>
+              </div>
+            </dl>
+          </section>
+          <section class="panel">
+            <h2>Import a JSON dump</h2>
+            <p>If a bot replies with JSON in chat, paste it here.</p>
+            <textarea id="import-json" rows="6" placeholder='{"bot":"job_tracker","applications":[]}'></textarea>
+            <button id="import-btn" class="btn-primary" type="button">Import into board</button>
+            <p class="status" id="import-status"></p>
+          </section>
+        </div>
+        <section class="panel">
+          <div class="pane-head">
+            <h2>Paste into each bot</h2>
+            <button id="copy-all" type="button">Copy all instructions</button>
+          </div>
+          <details class="prompt" open>
+            <summary>Job Tracker</summary>
+            <pre id="prompt-tracker"></pre>
+          </details>
+          <details class="prompt">
+            <summary>LinkedIn Job Bot</summary>
+            <pre id="prompt-linkedin"></pre>
+          </details>
+          <details class="prompt">
+            <summary>Job Email Bot</summary>
+            <pre id="prompt-email"></pre>
+          </details>
+        </section>
+      </main>
+
+      <main id="about-view" class="page about hidden">
+        <div class="about-hero">
+          <p class="eyebrow">Product guide</p>
+          <h2>One board for every role your Grok Bots touch</h2>
+          <p>
+            Job Command Center is the desk view for Carter’s search. Applications,
+            recruiter status, and LinkedIn suggestions land here so you can act
+            without hunting through three bot threads.
+          </p>
+        </div>
+        <div class="about-grid">
+          <article class="about-card">
+            <span class="step">01</span>
+            <h3>Home</h3>
+            <p>
+              The pipeline is grouped by status: Applied, Screening, Interview, and Closed.
+              Use the search field to filter. Change a role’s status from the dropdown on the card.
+            </p>
+          </article>
+          <article class="about-card">
+            <span class="step">02</span>
+            <h3>LinkedIn suggestions</h3>
+            <p>
+              <strong>Apply</strong> opens the real posting (LinkedIn or the company ATS) and
+              moves the role onto Applied. <strong>Remove</strong> hides listings that are not a
+              fit so they stay off the board on the next sync.
+            </p>
+          </article>
+          <article class="about-card">
+            <span class="step">03</span>
+            <h3>Metrics</h3>
+            <p>
+              Overview, Funnel, and Companies show rates, mix, weekly volume, and where
+              suggestions concentrate. Use this when you want the shape of the search, not every card.
+            </p>
+          </article>
+          <article class="about-card">
+            <span class="step">04</span>
+            <h3>Connect bots</h3>
+            <p>
+              Grok Bot has no public read API. Paste the prompts into Job Tracker, LinkedIn Job Bot,
+              and Job Email Bot, and enable Execution on Local Computer. Or drop JSON into
+              <code>data/inbox/</code> / import from chat.
+            </p>
+          </article>
+        </div>
+        <section class="panel about-foot">
+          <h3>Keep it current</h3>
+          <p>
+            Leave this app running on this Mac. After each scrape or inbox pass, the bots POST
+            to the local ingest URL. Home refreshes on its own. Collapsing the side menu (the
+            chevron next to Command Center) keeps the board full-width when you want more columns.
+          </p>
+        </section>
+      </main>
+    </div>
+    <script src="/app.js?v=5"></script>
+  </body>
+</html>
