@@ -1,6 +1,6 @@
 # Job Command Center
 
-Local dashboard for applications, status, and LinkedIn suggestions coming out of Grok Bot (Job Tracker, LinkedIn Job Bot, Job Email Bot).
+Local dashboard for applications, status, and LinkedIn suggestions coming out of Grok Bot (Job Tracker Bot, LinkedIn Job Bot, Job Email Bot).
 
 Grok Bot has no public read API for those conversations. This app is the sink: the bots write JSON to your Mac, and the board displays it.
 
